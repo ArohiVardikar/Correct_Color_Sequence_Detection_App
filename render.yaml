@@ -3,6 +3,9 @@ services:
   - type: web
     name: cable-color-sequence-checker
     env: python
-    buildCommand: ""
-    startCommand: gunicorn app:app
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: python app.py
     plan: free
+    build:
+  pythonVersion: 3.10
+
