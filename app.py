@@ -1,3 +1,4 @@
+import tensorflow as tf
 import os
 import numpy as np
 import joblib
@@ -157,5 +158,8 @@ def index():
 
     return render_template('index.html', result=result, image_path=image_path)
 
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    try:
+        app.run(debug=False, host='0.0.0.0', port=10000)
+    except Exception as e:
+        print("❌ Application crashed with error:", e)
