@@ -10,7 +10,7 @@ from tensorflow.keras.applications import EfficientNetB0
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from tensorflow.keras.applications.efficientnet import preprocess_input
 from tensorflow.keras.models import load_model
-from flask_ngrok import run_with_ngrok
+#from flask_ngrok import run_with_ngrok
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -63,7 +63,7 @@ INCORRECT_DIR = "dataset/Incorrect"
 AUG_PER_IMAGE = 100
 
 app = Flask(__name__)
-run_with_ngrok(app)
+#run_with_ngrok(app)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
