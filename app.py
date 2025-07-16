@@ -159,7 +159,9 @@ def index():
     return render_template('index.html', result=result, image_path=image_path)
 
 if __name__ == "__main__":
+    import traceback
     try:
         app.run(debug=False, host='0.0.0.0', port=10000)
     except Exception as e:
-        print("❌ Application crashed with error:", e)
+        print("❌ CRASHED:", e)
+        traceback.print_exc()
