@@ -46,8 +46,8 @@ def extract_features(img):
     v_mean = np.mean(hsv[:,:,2])
     return [h_mean, s_mean, v_mean]
 
-correct_X, correct_y = load_images_from_folder("/content/dataset/correct", 1)
-incorrect_X, incorrect_y = load_images_from_folder("/content/dataset/Incorrect", 0)
+correct_X, correct_y = load_images_from_folder("dataset/Correct", 1)
+incorrect_X, incorrect_y = load_images_from_folder("", 0)
 
 X = correct_X + incorrect_X
 y = incorrect_y + correct_y
