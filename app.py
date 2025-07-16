@@ -58,7 +58,7 @@ y = np.array(y)
 
 IMG_SIZE = (224, 224)
 UPLOAD_FOLDER = 'uploads'
-CORRECT_DIR = "dataset/correct"
+CORRECT_DIR = "dataset/Correct"
 INCORRECT_DIR = "dataset/Incorrect"
 AUG_PER_IMAGE = 100
 
