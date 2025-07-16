@@ -47,7 +47,7 @@ def extract_features(img):
     return [h_mean, s_mean, v_mean]
 
 correct_X, correct_y = load_images_from_folder("dataset/Correct", 1)
-incorrect_X, incorrect_y = load_images_from_folder("", 0)
+incorrect_X, incorrect_y = load_images_from_folder("dataset/Incorrect", 0)
 
 X = correct_X + incorrect_X
 y = incorrect_y + correct_y
