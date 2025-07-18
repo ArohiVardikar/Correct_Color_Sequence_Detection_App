@@ -4,7 +4,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import numpy as np
 import joblib
 import cv2
-from flask import Flask, render_template, request
+from flask import Flask, request, jsonify, render_template
 from werkzeug.utils import secure_filename
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
@@ -17,20 +17,20 @@ MODEL_PATH = 'saved_model/model.pkl'
 FEATURE_NET_PATH = 'saved_model/feature_net.h5'
 
 # Flask App Setup
-app = Flask(__name__)
+app = Flask(_name_)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Load Pre-trained Models
+# Load Models
 if os.path.exists(MODEL_PATH) and os.path.exists(FEATURE_NET_PATH):
     clf = joblib.load(MODEL_PATH)
     feature_net = load_model(FEATURE_NET_PATH)
-    print("✅ Model and FeatureNet loaded from disk.")
+    print("✅ Model and FeatureNet loaded.")
 else:
-    print("❌ Model files not found. Please upload 'model.pkl' and 'feature_net.h5'")
+    print("❌ Missing model files.")
     exit()
 
-# Prediction Function
+# Prediction function
 def predict_cable_image(img_path):
     img = load_img(img_path, target_size=IMG_SIZE)
     arr = preprocess_input(img_to_array(img))[None, ...]
@@ -39,29 +39,30 @@ def predict_cable_image(img_path):
     label = "Correct" if prob >= 0.5 else "Incorrect"
     return label, float(prob)
 
-# Web Interface
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    result = None
-    image_path = None
-    if request.method == 'POST':
-        file = request.files['file']
-        if file:
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
+# Homepage
+@app.route("/", methods=["GET"])
+def home():
+    return "<h2>✅ Cable Sequence Detection Backend is Running</h2>"
 
-            label, similarity = predict_cable_image(filepath)
-            result = f"Prediction: {label} | Confidence: {similarity:.2f}"
-            image_path = '/' + filepath
+# API Route
+@app.route("/predict", methods=["POST"])
+def predict():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "Empty filename"}), 400
 
-    return render_template('index.html', result=result, image_path=image_path)
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(filepath)
 
-# Run App
-if __name__ == "__main__":
-    import traceback
-    try:
-        app.run(debug=False, host='0.0.0.0', port=10000)
-    except Exception as e:
-        print("❌ CRASHED:", e)
-        traceback.print_exc()
+    label, confidence = predict_cable_image(filepath)
+    return jsonify({
+        "result": label,
+        "confidence": round(confidence, 2)
+    })
+
+# Run locally or on Render
+if _name_ == "_main_":
+    app.run(host="0.0.0.0", port=10000)
